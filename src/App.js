@@ -26,7 +26,7 @@ function App() {
   const handleQuantityChange = (index, value) => {
     const newQuantities = [...quantities];
     newQuantities[index] = value;
-    setQuantities(newQuantities);
+    setQuantities(newQuantities.map(qty => (qty === 0 ? '' : qty)));
   };
 
   // Function to calculate total for each row
@@ -98,22 +98,24 @@ function App() {
           </tr>
         </thead>
         <tbody>
-  {products.map((product, index) => (
-    <tr key={index} className="border-b">
-      <td className="py-2 px-4 font-bold">{product.name}</td>
-      <td className="py-2 px-4 text-right">{product.price}</td>
-      <td className="py-2 px-4 text-right">
-        <input
-          type="number"
-          min="0"
-          value={quantities[index]}
-          onChange={(e) => handleQuantityChange(index, parseInt(e.target.value, 10) || 0)}
-          className="w-16 px-2 py-1 border rounded"
-        />
-      </td>
-      <td className="py-2 px-4 text-right">{calculateTotal(index)}</td>
-    </tr>
-  ))}
+        {products.map((product, index) => (
+  <tr key={index} className="border-b">
+    <td className="py-2 px-4 font-bold">{product.name}</td>
+    <td className="py-2 px-4 text-right">{product.price}</td>
+    <td className="py-2 px-4 text-right">
+      <input
+        type="number"
+        min="0"
+        value={quantities[index]}
+        onChange={(e) => handleQuantityChange(index, parseInt(e.target.value, 10) || 0)}
+        className="w-16 px-2 py-1 border rounded"
+      />
+    </td>
+    <td className={`py-2 px-4 text-right ${calculateTotal(index) > 0 ? 'text-red-500' : 'text-green-500'}`}>
+      {calculateTotal(index)}
+    </td>
+  </tr>
+))}
 </tbody>
         <tfoot className="bg-blue-500 text-white">
           <tr>
@@ -130,20 +132,20 @@ function App() {
       <div className="flex flex-col items-center mt-4">
         <label className="block mb-2 text-blue-600">Enter Amount:</label>
         <div className="flex items-center mb-2">
-          <input
-            type="number"
-            min="0"
-            value={enteredAmount}
-            onChange={handleAmountChange}
-            className="w-16 px-2 py-1 border rounded mr-2"
-          />
+        <input
+  type="number"
+  min="0"
+  value={enteredAmount}
+  onChange={handleAmountChange}
+  className="w-32 px-2 py-1 border rounded mr-2"
+/>
           <label className="text-blue-600">Result:</label>
           <input
-            type="text"
-            value={calculateResult()}
-            readOnly
-            className="w-16 px-2 py-1 border rounded bg-gray-200 ml-2"
-          />
+  type="text"
+  value={calculateResult()}
+  readOnly
+  className={`w-32 px-2 py-1 border rounded mr-2 ${calculateResult() > 0 ? 'text-red-700' : 'text-green-700'}`}
+/>
         </div>
 
         {/* Submit Button */}
